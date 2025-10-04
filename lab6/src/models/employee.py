@@ -22,6 +22,6 @@ class EmployeeOut(BaseModel):
 
 
 class EmployeeUpdate(BaseModel):
-    first_name: str | None
-    last_name: str | None
-    age: int | None
+    first_name: str | None = None
+    last_name: str | None = None
+    age: int | None = None
