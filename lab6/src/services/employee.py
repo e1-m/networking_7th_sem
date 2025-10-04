@@ -8,10 +8,6 @@ class EmployeeService:
         self._repo = repo
 
     def create(self, data: EmployeeIn) -> EmployeeOut:
-        for emp in self._repo.list():
-            if emp.first_name == data.first_name and emp.last_name == data.last_name and emp.age == data.age:
-                raise EmployeeAlreadyExistsError(emp.id)
-
         return self._repo.create(data)
 
     def get(self, emp_id: str) -> EmployeeOut:
