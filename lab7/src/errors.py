@@ -3,3 +3,7 @@ class CryptographyServiceError(Exception):
         self.message = message
         self.headers = headers
         super().__init__(self.message)
+
+
+class ResourceNotFound(CryptographyServiceError):
+    ...
