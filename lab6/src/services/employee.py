@@ -11,7 +11,7 @@ class EmployeeService:
         return self._repo.create(data)
 
     def get(self, emp_id: str) -> EmployeeOut:
-        if emp := self._repo.get(emp_id) is None:
+        if (emp := self._repo.get(emp_id)) is None:
             raise EmployeeNotFoundError(emp_id)
         return emp
 
