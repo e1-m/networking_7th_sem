@@ -8,12 +8,12 @@ from src.schemas import IdResponse, PublicKeyResponse
 from src.services.rsa import RsaService
 from src.storage import Storage
 
-crypto_keys = APIRouter(
+router = APIRouter(
     prefix="/crypto-keys",
 )
 
 
-@crypto_keys.post("/generate/rsa-keys", response_model=IdResponse)
+@router.post("/generate/rsa-keys", response_model=IdResponse)
 def generate_rsa_keys(
         rsa_service: RsaService = Depends(get_rsa_service),
         storage: Storage = Depends(get_storage)
@@ -25,7 +25,7 @@ def generate_rsa_keys(
     return IdResponse(id=key_id)
 
 
-@crypto_keys.get("/rsa-public-key/{key_id}", response_model=PublicKeyResponse)
+@router.get("/rsa-public-key/{key_id}", response_model=PublicKeyResponse)
 def get_public_key(key_id: int, storage: Storage = Depends(get_storage)):
     if not (pub := storage.get_public(key_id)):
         raise ResourceNotFound("RSA public key not found")

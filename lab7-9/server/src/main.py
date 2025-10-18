@@ -8,11 +8,11 @@ from src.errors import (
     CryptographyServiceError,
     ResourceNotFound
 )
-from src.routers import crypto_keys
+from src.routers import crypto
 
 api = APIRouter(prefix="/api")
 
-api.include_router(crypto_keys)
+api.include_router(crypto.router)
 
 
 @asynccontextmanager
