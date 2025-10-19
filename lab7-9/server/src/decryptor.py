@@ -5,12 +5,12 @@ from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 
 
-class AsyncDecryptor(ABC):
+class Decryptor(ABC):
     @abstractmethod
     def decrypt(self, cipher_text_b64): ...
 
 
-class RsaDecryptor(AsyncDecryptor):
+class RsaDecryptor(Decryptor):
     def __init__(self, private_key_pem: bytes) -> None:
         self.private_key_pem = private_key_pem
 

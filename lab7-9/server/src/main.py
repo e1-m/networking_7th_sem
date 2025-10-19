@@ -4,6 +4,7 @@ from fastapi import FastAPI, Request, status, APIRouter
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.deps import get_redis, get_cache_handler
 from src.errors import (
     CryptographyServiceError,
     ResourceNotFound
@@ -17,6 +18,7 @@ api.include_router(crypto.router)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    app.state.cache_handler = get_cache_handler(get_redis())
     yield
 
 
