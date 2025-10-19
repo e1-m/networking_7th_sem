@@ -7,3 +7,11 @@ class CryptographyServiceError(Exception):
 
 class ResourceNotFound(CryptographyServiceError):
     ...
+
+
+class MissingSessionHeader(CryptographyServiceError):
+    ...
+
+
+class InvalidSession(CryptographyServiceError):
+    ...
