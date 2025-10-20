@@ -9,13 +9,6 @@ from src.config import settings
 from src.decryptor import RsaDecryptor, Decryptor
 from src.key_generator import KeyPairGenerator, RsaKeyPairGenerator
 from src.key_pool import KeyPool
-from src.services.rsa import RsaService
-
-
-def get_rsa_service() -> RsaService:
-    return RsaService(
-
-    )
 
 
 @lru_cache

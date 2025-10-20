@@ -1,4 +1,3 @@
-import base64
 import random
 from dataclasses import dataclass
 
@@ -26,12 +25,12 @@ class KeyPool:
         if not public_key:
             keypair = self.generator.generate_keypair()
 
-            await self.cache.set(f"private-key-{key_id}", base64.b64encode(keypair.private_key_pem).decode("ascii"))
-            await self.cache.set(f"public-key-{key_id}", base64.b64encode(keypair.public_key_pem).decode("ascii"))
+            await self.cache.set(f"private-key-{key_id}", keypair.private_key_pem.decode("ascii"))
+            await self.cache.set(f"public-key-{key_id}", keypair.public_key_pem.decode("ascii"))
 
-            return PublicKey(id=key_id, key_pem=base64.b64decode(keypair.public_key_pem))
+            return PublicKey(id=key_id, key_pem=keypair.public_key_pem)
 
-        return PublicKey(id=key_id, key_pem=base64.b64decode(public_key))
+        return PublicKey(id=key_id, key_pem=public_key.encode("ascii"))
 
     async def get_private_key(self, key_id) -> bytes:
         key = await self.cache.get(f"private-key-{key_id}")
@@ -39,4 +38,4 @@ class KeyPool:
         if not key_id:
             raise ResourceNotFound("Public key not found")
 
-        return base64.b64decode(key)
+        return key.encode("ascii")

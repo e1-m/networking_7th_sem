@@ -9,11 +9,13 @@ from src.errors import (
     CryptographyServiceError,
     ResourceNotFound
 )
-from src.routers import crypto
+from src.routers import crypto, echo, sessions
 
 api = APIRouter(prefix="/api")
 
 api.include_router(crypto.router)
+api.include_router(sessions.router)
+api.include_router(echo.router)
 
 
 @asynccontextmanager

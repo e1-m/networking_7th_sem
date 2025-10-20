@@ -9,12 +9,12 @@ class AesCryptor:
         self.aesgcm = AESGCM(key)
         self.iv_bits = iv_bits
 
-    def encrypt(self, plain: bytes) -> str:
+    def encrypt(self, plain: bytes) -> bytes:
         iv = os.urandom(self.iv_bits)
         ct = self.aesgcm.encrypt(iv, plain, associated_data=None)
-        return base64.b64encode(iv + ct).decode('ascii')
+        return base64.b64encode(iv + ct)
 
-    def decrypt(self, cipher_b64: str) -> bytes:
+    def decrypt(self, cipher_b64: str | bytes) -> bytes:
         packed = base64.b64decode(cipher_b64)
         iv, ct = packed[:12], packed[12:]
         return self.aesgcm.decrypt(iv, ct, associated_data=None)

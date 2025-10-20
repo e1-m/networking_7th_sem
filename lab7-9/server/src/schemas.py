@@ -1,10 +1,6 @@
 from pydantic import BaseModel
 
 
-class IdResponse(BaseModel):
-    id: int
-
-
 class PublicKeyResponse(BaseModel):
     key_id: str
     public_key: str

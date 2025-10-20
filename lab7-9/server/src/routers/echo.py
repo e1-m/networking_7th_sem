@@ -1,5 +1,5 @@
 import base64
-from datetime import datetime
+from datetime import datetime, UTC
 
 import time
 
@@ -8,7 +8,7 @@ from fastapi.routing import APIRoute
 
 from src.aes import AesCryptor
 from src.errors import MissingSessionHeader, InvalidSession
-from src.schemas import IdResponse, MessageIn, MessageOut, Session
+from src.schemas import MessageIn, MessageOut, Session
 
 
 class EncryptedRoute(APIRoute):
@@ -28,7 +28,7 @@ class EncryptedRoute(APIRoute):
             cryptor = AesCryptor(base64.b64decode(session.aes_key_b64))
 
             if body := await request.body():
-                request._body = cryptor.decrypt(base64.b64encode(body).decode('ascii'))
+                request._body = cryptor.decrypt(body)
 
             response = await original(request)
 
@@ -49,8 +49,8 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=IdResponse)
-def echo(
+@router.post("/", response_model=MessageOut)
+async def echo(
         message: MessageIn,
 ):
-    return MessageOut(message=f"[{datetime.fromtimestamp(time.time())}] {message.message}")
+    return MessageOut(message=f"[{datetime.fromtimestamp(time.time(), tz=UTC)}] {message.message}")
