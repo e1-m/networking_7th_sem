@@ -13,8 +13,10 @@ router = APIRouter(
 
 
 @router.get("/public-key", response_model=PublicKeyResponse)
-async def get_public_key(response: Response, pool: KeyPool = Depends(get_key_pool)):
+async def get_public_key(pool: KeyPool = Depends(get_key_pool)):
     pub = await pool.get_random_public_key()
 
-    response.headers["x-rsa-id"] = f"{pub.id}"
-    return PublicKeyResponse(public_key=base64.b64encode(pub.key_pem).decode("ascii"))
+    return PublicKeyResponse(
+        key_id=pub.id,
+        public_key=base64.b64encode(pub.key_pem).decode("ascii")
+    )

@@ -6,6 +6,7 @@ class IdResponse(BaseModel):
 
 
 class PublicKeyResponse(BaseModel):
+    key_id: str
     public_key: str
 
 

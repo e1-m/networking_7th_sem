@@ -9,7 +9,7 @@ from src.key_generator import KeyPairGenerator
 
 @dataclass
 class PublicKey:
-    id: int
+    id: str
     key_pem: bytes
 
 
@@ -20,7 +20,7 @@ class KeyPool:
         self.size = size
 
     async def get_random_public_key(self) -> PublicKey:
-        key_id = random.randint(0, self.size - 1)
+        key_id = str(random.randint(0, self.size - 1))
         public_key = await self.cache.get(f"public-key-{key_id}")
 
         if not public_key:
