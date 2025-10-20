@@ -1,6 +1,4 @@
-import base64
-
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends
 
 from src.deps import get_key_pool
 from src.key_pool import KeyPool
@@ -18,5 +16,5 @@ async def get_public_key(pool: KeyPool = Depends(get_key_pool)):
 
     return PublicKeyResponse(
         key_id=pub.id,
-        public_key=base64.b64encode(pub.key_pem).decode("ascii")
+        public_key=pub.key_pem.decode("ascii")
     )
