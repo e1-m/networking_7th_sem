@@ -1,0 +1,7 @@
+name: networking-lab7-9
+services:
+  dragonfly:
+    container_name: dragonfly-networking-lab7-9
+    image: 'docker.dragonflydb.io/dragonflydb/dragonfly'
+    ports:
+      - "6380:6379"
