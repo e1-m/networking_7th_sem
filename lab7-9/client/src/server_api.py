@@ -21,7 +21,7 @@ class ServerApi:
         self.http_client = http_client
         self.session_manager = session_manager
 
-    async def send_message(self, message: MessageIn) -> MessageOut:
+    async def echo(self, message: MessageIn) -> MessageOut:
         session = await self.session_manager.get_session()
         cryptor = AesCryptor(session.aes_key)
 
