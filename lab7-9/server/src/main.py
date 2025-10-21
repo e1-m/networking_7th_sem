@@ -20,7 +20,9 @@ api.include_router(echo.router)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    app.state.cache_handler = get_cache_handler(get_redis())
+    redis = get_redis()
+    await redis.ping()
+    app.state.cache_handler = get_cache_handler(redis)
     yield
 
 
