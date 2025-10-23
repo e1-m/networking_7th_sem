@@ -6,6 +6,8 @@ class Settings(BaseSettings):
 
     KEY_POOL_SIZE: int = 10
 
+    SESSION_EXPIRATION_SECONDS: int = 30
+
     REDIS_HOST: str
     REDIS_PORT: int
 

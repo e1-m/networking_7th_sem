@@ -8,6 +8,7 @@ class PublicKeyResponse(BaseModel):
 
 class SessionOut(BaseModel):
     session_id: str
+    expires_at: int
 
 
 class SessionIn(BaseModel):
@@ -17,6 +18,7 @@ class SessionIn(BaseModel):
 class Session(BaseModel):
     session_id: str
     aes_key_b64: str
+    expires_at: int
 
 
 class MessageIn(BaseModel):
