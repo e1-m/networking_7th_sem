@@ -10,7 +10,7 @@ BASE_URL = "http://localhost:8000/api"
 
 
 async def main():
-    async with aiohttp.ClientSession() as http:
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(force_close=True)) as http:
         session_manager = SessionManager(
             base_url=BASE_URL,
             http_client=http,

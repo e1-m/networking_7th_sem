@@ -1,5 +1,6 @@
 import base64
 from dataclasses import dataclass
+import time
 
 import aiohttp
 
@@ -11,6 +12,7 @@ from src.rsa_encryptor import RsaEncryptor
 class Session:
     session_id: str
     aes_key: bytes
+    expires_at: int
 
 
 @dataclass
@@ -59,11 +61,14 @@ class SessionManager:
             session_data = await resp.json()
             return Session(
                 session_id=session_data["session_id"],
+                expires_at=session_data["expires_at"],
                 aes_key=aes_key,
             )
 
     async def get_session(self) -> Session:
-        if self._session is not None:
+        valid_session_exists = (self._session is not None) and self._session.expires_at >= int(time.time()) - 3
+
+        if valid_session_exists:
             return self._session
 
         self._session = await self._initiate_new_session()
