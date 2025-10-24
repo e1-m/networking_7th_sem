@@ -54,7 +54,7 @@ class SessionManager:
         encrypted_aes_key_b64 = encryptor.encrypt(aes_key_b64)
 
         async with self.http_client.post(
-                f"{self.base_url}/sessions",
+                f"{self.base_url}/sessions/",
                 json={"aes_key_b64_encrypted": encrypted_aes_key_b64},
                 headers={"x-rsa-id": f"{public_key.key_id}"},
         ) as resp:

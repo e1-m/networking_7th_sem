@@ -1,3 +1,4 @@
+import hashlib
 import json
 
 import aiohttp
@@ -26,13 +27,23 @@ class ServerApi:
         cryptor = AesCryptor(session.aes_key)
 
         plaintext_bytes = json.dumps(message.model_dump(mode="json")).encode("utf-8")
+        hashed_data = hashlib.sha256(plaintext_bytes).hexdigest()
         encrypted_body_b64 = cryptor.encrypt(plaintext_bytes)
 
         async with self.http_client.post(
                 f"{self.base_url}/echo/",
                 data=encrypted_body_b64,
-                headers={"session-id": session.session_id, "content-type": "application/json"},
+                headers={
+                    "hash": hashed_data,
+                    "session-id": session.session_id,
+                    "content-type": "application/json"
+                },
         ) as resp:
-            enc_response = await resp.read()
-            decrypted = cryptor.decrypt(enc_response.decode("utf-8"))
+            if resp.status != 200:
+                raise RuntimeError(
+                    await resp.text()
+                )
+
+            encrypted_response = await resp.read()
+            decrypted = cryptor.decrypt(encrypted_response.decode("utf-8"))
             return MessageOut(**json.loads(decrypted.decode("utf-8")))
