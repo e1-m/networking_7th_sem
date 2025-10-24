@@ -7,7 +7,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.deps import get_redis, get_cache_handler
 from src.errors import (
     CryptographyServiceError,
-    ResourceNotFound
+    ResourceNotFound,
+    CorruptedRequest,
+    MissingHeader,
+    InvalidSession
 )
 from src.routers import crypto, echo, sessions
 
@@ -50,6 +53,9 @@ def create_exception_handler(status_code, initial_detail):
 exception_handlers = [
     (CryptographyServiceError, status.HTTP_500_INTERNAL_SERVER_ERROR, "Internal Server Error"),
     (ResourceNotFound, status.HTTP_404_NOT_FOUND, "Resource not found"),
+    (CorruptedRequest, status.HTTP_400_BAD_REQUEST, "Corrupted Request"),
+    (MissingHeader, status.HTTP_401_UNAUTHORIZED, "Missing Header"),
+    (InvalidSession, status.HTTP_401_UNAUTHORIZED, "Invalid Session"),
 ]
 
 for exc_class, status_code, message in exception_handlers:
