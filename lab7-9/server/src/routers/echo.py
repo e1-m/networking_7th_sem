@@ -1,13 +1,13 @@
 import base64
-from datetime import datetime, UTC
-
+import hashlib
 import time
+from datetime import datetime, UTC
 
 from fastapi import APIRouter, Request
 from fastapi.routing import APIRoute
 
 from src.aes import AesCryptor
-from src.errors import MissingSessionHeader, InvalidSession
+from src.errors import MissingHeader, InvalidSession, CorruptedRequest
 from src.schemas import MessageIn, MessageOut, Session
 
 
@@ -17,7 +17,10 @@ class EncryptedRoute(APIRoute):
 
         async def custom_route_handler(request: Request):
             if not (session_id := request.headers.get("session-id")):
-                raise MissingSessionHeader("Missing session-id header")
+                raise MissingHeader("Missing session-id header")
+
+            if not (body_hash := request.headers.get("hash")):
+                raise MissingHeader("Missing hash header")
 
             cache = request.app.state.cache_handler
 
@@ -28,7 +31,12 @@ class EncryptedRoute(APIRoute):
             cryptor = AesCryptor(base64.b64decode(session.aes_key_b64))
 
             if body := await request.body():
-                request._body = cryptor.decrypt(body)
+                decrypted_body = cryptor.decrypt(body)
+
+                if hashlib.sha256(decrypted_body).hexdigest() != body_hash:
+                    raise CorruptedRequest("Hashes do not match")
+
+                request._body = decrypted_body
 
             response = await original(request)
 

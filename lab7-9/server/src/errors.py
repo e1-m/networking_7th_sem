@@ -9,7 +9,11 @@ class ResourceNotFound(CryptographyServiceError):
     ...
 
 
-class MissingSessionHeader(CryptographyServiceError):
+class MissingHeader(CryptographyServiceError):
+    ...
+
+
+class CorruptedRequest(CryptographyServiceError):
     ...
 
 
